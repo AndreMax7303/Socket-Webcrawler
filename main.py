@@ -16,7 +16,7 @@ def request(url):
         response = tcp_client.request(path)
         status_code = int(response[9:12])
         print(status_code)
-        # print(response)
+        print(response)
 
 
 

@@ -1,4 +1,3 @@
-import socket
 import sys
 
 from tcp_client import TCPClient
@@ -6,13 +5,6 @@ from bs4 import BeautifulSoup
 
 
 img_suffix = ['.gif', '.jpeg', '.png', '.svg', '.webp', 'jpg']
-
-# 1 - http://hostname/path/
-# 2 - hostname/path/
-# 3 - hostname/path/./img.png <- src = ./img.png -> hostname/img.png
-# 4 - hostname/path/img.png <- src = img.png -> hostname/path/img.png
-# 5 - hostname/path//img.png <- src = /img.png -> hostname/img.png
-# 6 - hostname/path/./img.png <- src = /./img.png -> hostname/img.png
 
 
 def get_path(url):
@@ -82,11 +74,6 @@ def request(url):
         deal_with_text(response_body_bytes)
 
 
-
-
-
-# 'www.ic.uff.br/~vefr/'
-# 'http://www.ic.uff.br/index.php/pt/'
 # input_url = 'http://www.ic.uff.br/index.php/pt/'
 input_url = 'www.ic.uff.br/~vefr/'
 request(input_url)

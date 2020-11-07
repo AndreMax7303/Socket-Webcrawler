@@ -2,10 +2,6 @@ from tcp_client import TCPClient
 from bs4 import BeautifulSoup
 from enum import Enum
 
-class DownloadType(Enum):
-    TXT = 1
-    IMG = 2
-
 
 def split_url(url):
     url = url.split('/')
@@ -17,24 +13,15 @@ def split_url(url):
     return hostname, path
 
 
-def request(url, download_type):
+def request(url):
     hostname, path = split_url(url)
     with TCPClient(hostname) as tcp_client:
-        response = tcp_client.request(path)
-        status_code = int(response[9:12])
-        # if status_code != 200:
-        #     print('Status: {}'.format(status_code))
-        #     if download_type == DownloadType.TXT:
-        #         print('!!!Exiting program!!!')
-        #         return
-        #     else:
-        #         print('URL: {}'.format(url))
-        #         return
-        print(status_code)
+        response, content_type, status_code = tcp_client.request(path)
+
         print(response)
 
 
 
 # 'www.ic.uff.br/~vefr/'
-request('www.ic.uff.br/~vefr', DownloadType.IMG)
+request('www.ic.uff.br/~vefr')
 # soup = BeautifulSoup(tcp_client.request(), 'html.parser')

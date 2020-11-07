@@ -25,7 +25,6 @@ class TCPClient:
         return self
 
     def request(self, path):
-        print(path)
         self.socket.send('GET /{} HTTP/1.1 \r\nHost: {} \r\nAccept-Encoding: identity \r\n\r\n'.format(path, self.hostname).encode('UTF-8'))
         received = self.socket.recv(self.buffsize)
         received_split = received.split(b'\r\n\r\n')[0].split(b'\r\n')
@@ -36,8 +35,13 @@ class TCPClient:
         if is_content_length:
             while len(received) < int(content_length):
                 received += self.socket.recv(self.buffsize)
-        status_code = get_status(received_split[0])
-        return received, content_type, status_code
+        try:
+            status_code = get_status(received_split[0])
+            response_body = received.split(b'\r\n\r\n')[1]
+        except:
+            status_code = 500
+            response_body = None
+        return response_body, content_type, status_code
 
     def __exit__(self, type, value, tb):
         self.socket.close()

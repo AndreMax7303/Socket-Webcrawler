@@ -18,7 +18,7 @@ class TCPClient:
     def __init__(self, hostname):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.hostname = hostname
-        self.buffsize = 4096
+        self.buffsize = 4096 * 2
 
     def __enter__(self):
         self.socket.connect((self.hostname, 80))
@@ -32,12 +32,22 @@ class TCPClient:
         if not has_content_type:
             content_type = 'text/plain'
         is_content_length, content_length = get_content(b'Content-Length', received_split)
+        last_received = 0
         if is_content_length:
             while len(received) < int(content_length):
-                received += self.socket.recv(self.buffsize)
+                last_received = self.socket.recv(self.buffsize)
+                if len(last_received) == 0:
+                    break
+                received += last_received
+        else:
+            while b'0\r\n\r\n' not in received:
+                last_received = self.socket.recv(self.buffsize)
+                if len(last_received) == 0:
+                    break
+                received += last_received
         try:
             status_code = get_status(received_split[0])
-            response_body = received.split(b'\r\n\r\n')[1]
+            response_body = received.split(b'\r\n\r\n', 1)[1]
         except:
             status_code = 500
             response_body = None

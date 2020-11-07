@@ -75,6 +75,7 @@ def request(url):
 
 
 # input_url = 'http://www.ic.uff.br/index.php/pt/'
-input_url = 'www.ic.uff.br/~vefr/'
+# input_url = 'www.ic.uff.br/~vefr/'
+input_url = sys.argv[1]
 request(input_url)
 
